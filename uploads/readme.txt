@@ -1,0 +1,1 @@
+Carpeta donde se almacenarán temporalmente los scripts de python

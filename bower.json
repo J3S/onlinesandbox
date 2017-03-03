@@ -1,0 +1,29 @@
+{
+  "name": "sandbox",
+  "description": "",
+  "main": "",
+  "authors": [
+    "J3S <johnnysuarez@outlook.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/J3S/DAW2Parcial",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "components-font-awesome": "^4.7.0",
+    "Ionicons": "ionicons#^2.0.1",
+    "AdminLTE": "admin-lte#^2.3.11",
+    "datatables.net": "^2.1.1",
+    "datatables.net-bs": "^2.1.1",
+    "fastclick": "^1.0.6",
+    "EasyAutocomplete": "^1.3.5",
+    "Autocomplete": "autocomplete#^2.0.5",
+    "gnob": "knob#^0.1.11"
+  }
+}
