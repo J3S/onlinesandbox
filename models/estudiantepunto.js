@@ -5,4 +5,8 @@ var estudiantepuntoSchema = new mongoose.Schema({
     puntos: Number
 });
 
+estudiantepuntoSchema.statics.getEstudiantePunto = function(idest, cb) {
+  return this.find({ 'idEstudiante': idest }, cb);
+};
+
 module.exports = mongoose.model('EstudiantePuntos', estudiantepuntoSchema);
