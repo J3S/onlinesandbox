@@ -246,6 +246,61 @@ strfecha = dateConvert(date,format);
   }
 });
 
+router.get('/perfil', function(req, res, next) {
+strfecha = dateConvert(date,format);
+var data;
+  if(req.user){
+    if(req.user.rol === 'Estudiante'){
+        Usuario.findById(req.user._id, function(err, estudiante) {
+            console.log(estudiante);
+            if(estudiante) {
+                EstudianteEjercicio.find({idEstudiante: req.user._id}, function(err, dataest) {
+                    console.log(dataest);
+                    if(dataest.length > 0) {
+                        EstudiantePuntos.find({idEstudiante: req.user._id}, function(err, pts) {
+                            console.log(pts);
+                            if(pts.length > 0) {
+                                data = {
+                                    user: req.user,
+                                    puntos: pts[0].puntos,
+                                    numejercicios: dataest[0].idEjercicios.length
+                                }
+                                return res.render('ejercicios/perfil', data);
+                            } else {
+                                data = {
+                                    user: req.user,
+                                    puntos: 0,
+                                    numejercicios: dataest[0].idEjercicios.length
+                                }
+                                return res.render('ejercicios/perfil', data);
+                            }
+                        })
+                    } else {
+                        data = {
+                            user: req.user,
+                            puntos: 0,
+                            numejercicios: 0
+                        }
+                        return res.render('ejercicios/perfil', data);
+                    }
+                });
+            } else {
+                data = {
+                    user: req.user,
+                    puntos: 0,
+                    numejercicios: 0
+                }
+                return res.render('ejercicios/perfil', data);
+            }
+        });
+    } else {
+      return res.render('nopermitido');
+    }
+  } else {
+    return res.redirect('/index');
+  }
+});
+
 router.get('/ejercicio_random', function(req, res, next) {
     var dificultad = req.query.dificultad;
     var etiqueta = req.query.etiqueta;

@@ -49,7 +49,7 @@ $('#editarUsuario').click(function (event) {
             campoIdentificacion = 1;
         }
 
-        if(rol == "Profesor" || roll == "Administrador"){
+        if(rol == "Profesor" || rol == "Administrador"){
             campoCarrera = 1;
         } else {
             if (carrera === "") {
@@ -68,7 +68,7 @@ $('#editarUsuario').click(function (event) {
         camposLlenos = campoNombres + campoApellidos + campoCorreo + campoIdentificacion + campoCarrera;
         
         if (camposLlenos === 5) {
-            $("#form-editar").attr("action","/cursos/editar/"+id);
+            $("#form-editar").attr("action","/usuarios/editar/"+id);
             $("#form-editar").attr("method","post");
             $("#editarUsuario").attr("data-toggle","modal");
             $("#editarUsuario").attr("data-target","#myModal");

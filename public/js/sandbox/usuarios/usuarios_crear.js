@@ -50,7 +50,7 @@ $('#crearUsuario').click(function (event) {
             $("#identificacion-group").removeClass("has-error");
             campoIdentificacion = 1;
         }
-        if(rol == "Profesor" || roll == "Administrador"){
+        if(rol == "Profesor" || rol == "Administrador"){
             campoCarrera = 1;
         } else {
             if (carrera === "") {

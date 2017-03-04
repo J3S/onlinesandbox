@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Sandbox | Cursos</title>
+  <title>Sandbox | Perfil</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.6 -->
@@ -28,6 +28,7 @@
   <![endif]-->
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
+
 <!-- Site wrapper -->
 <div class="wrapper">
 
@@ -59,13 +60,15 @@
             <ul class="dropdown-menu">
               <!-- User image -->
               <li class="user-header">
-
                 <p id="nombre-popup-menu">
                   {{user.nombres}} {{user.apellidos}} - {{user.rol}}
                 </p>
               </li>
               <!-- Menu Footer-->
               <li class="user-footer">
+                <div class="pull-left">
+                  <a href="/ejercicios/perfil" class="btn btn-default btn-flat">Perfil</a>
+                </div>
                 <div class="pull-right">
                   <a href="/logout" class="btn btn-default btn-flat">Cerrar sesión</a>
                 </div>
@@ -97,9 +100,8 @@
       <ul class="sidebar-menu">
         <li class="header">Módulos</li>
         <li id="usuario-option"><a href="/usuarios"><i class="fa fa-book"></i> <span>Usuarios</span></a></li>
-        <li><a href="/ejercicios"><i class="fa fa-tasks"></i> <span>Ejercicios</span></a></li>
-        <li class="active"><a href="#"><i class="fa fa-folder"></i> <span>Cursos</span></a></li>
-        <li><a href="/reportes"><i class="fa fa-area-chart"></i> <span>Reportes</span></a></li>
+        <li class="active"><a href="/ejercicios/resolver"><i class="fa fa-tasks"></i> <span>Ejercicios</span></a></li>
+        <li id="curso-option"><a href="/cursos"><i class="fa fa-folder"></i> <span>Cursos</span></a></li>
       </ul>
     </section>
     <!-- /.sidebar -->
@@ -112,65 +114,52 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Cursos Registrados
+        Perfil
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Cursos</li>
+        <li class="active">Perfil</li>
       </ol>
     </section>
 
     <!-- Main content -->
     <section class="content">
-      <div class="row" id="div-crear-ejercicio">
-        <div class="col-xs-12" style="padding-bottom: 10px">
-          <a class="btn btn-success btn-lg" href="/cursos/crear"><i class="fa fa-plus"></i> Crear Curso</a>
-          <form action="/cursos/archivo" enctype="multipart/form-data" method="post">
-            <br><h4>Importar Curso(csv)</h4>
-            <div class="row">
-              <div class="col-xs-4 col-sm-4 col-md-4" >
-                <input type="file" name="file" id="archivo" >
-              </div>
-              <div class="col-xs-8 col-sm-8 col-md-8" >
-                <input type="submit" name="" value="Ingresar Curso" class="btn btn-primary">
-              </div>
-          </form>
-        </div>
-      </div>
       <div class="row">
         <div class="col-xs-12">
             <div class="box box-success">
               <div class="box-header">
-                <h3 class="box-title">Cursos registrados</h3>
+                <h3 class="box-title">{{user.nombres}} {{user.apellidos}}</h3>
+              </div>
+              <div class="box-body">
+                <div class="row">
+                  <div class="col-sm-12">
+                  <label id="titulo-ejercicio">Carrera: {{user.carrera}}</label><br>
+                  <label id="titulo-ejercicio">Puntos ganados: {{puntos}}</label><br>
+                  <label id="etiquetas-ejercicio">Número de ejercicios resueltos: {{numejercicios}}</label><br>
+                  <label id="dificultad-ejercicio"></label>
+                  </div>
+                </div>
               </div>
               <!-- /.box-header -->
-              <div class="box-body table-responsive">
-                    <!-- <div class="container"> -->
-                      <table id="usuarios" class="display table table-hover" cellspacing="0" width="100%">
-                        <thead>
-                          <tr>
-                            <th>Profesor</th>
-                            <th>Paralelo</th>
-                            <th>Lista de Estudiantes</th>
-                          </tr>
-                        </thead>
-                        <tbody id="lista-ejercicios">
-                          {{#each cursos}}
-                          <tr>
-                            <th>{{profesor}}</th>
-                            <th>{{paralelo}}</th>
-                            <th><a href="/cursos/lista/{{id}}">Lista de estudiantes</a></th>
-                            <td>
-                              <a href="/cursos/editar/{{id}}" class="col-sm-6 text-center"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</a><a data-url="" href="/cursos/{{id}}" class="col-sm-6 text-center borrar"><i class="fa fa-eraser" aria-hidden="true"></i> Borrar</a>
-                            </td>
-                              <!---->
-                          {{/each}}
-                        </tbody>
-            
-                      </table>
-                    <!-- </div> -->
-              </div>
               <!-- /.box-body -->
+              <div class="box-footer">
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <label>Insignias obtenidas</label>
+                        </div>
+                      </div>
+                      <div class="row" id="ejercicios-dificultad-estadistica">
+                        
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <label>Insignias disponibles</label>
+                        </div>
+                      </div>
+                      <div class="row" id="insignias-disp">
+                        
+                      </div>
+              </div>
             </div>
             <!-- /.box -->
         </div>
@@ -217,7 +206,7 @@
 <!-- Bootstrap 3.3.6 -->
 <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <!-- SlimScroll -->
-<script src="/node_modules/jquery.slimscroll.min.js"></script>
+<script src="/node_modules/slimscroll/jquery.slimscroll.min.js"></script>
 <!-- FastClick -->
 <script src="/bower_components/fastclick/lib/fastclick.js"></script>
 <!-- AdminLTE App -->
@@ -228,18 +217,99 @@
 <script type="text/javascript" language="javascript" src="/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" language="javascript" src="/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 
+<script src="/js/sandbox/ejercicios/ejercicios_resolver.js"></script>
 <script type="text/javascript">
   if ("{{{user.rol}}}" !== "Administrador") {
     $('#usuario-option').hide();
+  }
+    if ("{{{user.rol}}}" === "Estudiante") {
+    $('#curso-option').hide();
+  }
+
+function agregarInsignias(novato, intermedio, pro, ganadas) {
+  if(ganadas){
+    var divEjerciciosDificultad = $("#ejercicios-dificultad-estadistica");
+  }
+  else{
+    var divEjerciciosDificultad = $("#insignias-disp");
+  }
+
+  if(novato){
+    var divCol = $('<div class="col-xs-12 col-sm-6 col-md-4"></div>');
+    var box = $(' <div class="info-box bg-blue"></div>');
+    var span = $('<span class="info-box-icon"><i class="fa fa-cube"></i></span>');
+    var boxContent = $('<div class="info-box-content"></div>');
+    var boxContentText = $('<span class="info-box-text">Novato</span>');
+    var boxContentNumber = $('<span class="info-box-number">10 ejercicios resueltos</span>');
+    boxContent.append(boxContentText);
+    boxContent.append(boxContentNumber);
+    box.append(span);
+    box.append(boxContent);
+    divCol.append(box);
+    divEjerciciosDificultad.append(divCol);
+  }
+
+  if(intermedio) {
+    var divCol = $('<div class="col-xs-12 col-sm-6 col-md-4"></div>');
+    var box = $(' <div class="info-box bg-orange"></div>');
+    var span = $('<span class="info-box-icon"><i class="fa fa-cubes"></i></span>');
+    var boxContent = $('<div class="info-box-content"></div>');
+    var boxContentText = $('<span class="info-box-text">PRO</span>');
+    var boxContentNumber = $('<span class="info-box-number">20 ejercicios resueltos</span>');
+    boxContent.append(boxContentText);
+    boxContent.append(boxContentNumber);
+    box.append(span);
+    box.append(boxContent);
+    divCol.append(box);
+    divEjerciciosDificultad.append(divCol);
+  }
+
+  if(pro) {
+    var divCol = $('<div class="col-xs-12 col-sm-6 col-md-4"></div>');
+    var box = $(' <div class="info-box bg-purple"></div>');
+    var span = $('<span class="info-box-icon"><i class="fa fa-car"></i></span>');
+    var boxContent = $('<div class="info-box-content"></div>');
+    var boxContentText = $('<span class="info-box-text">PRO</span>');
+    var boxContentNumber = $('<span class="info-box-number">30 ejercicios resueltos</span>');
+    boxContent.append(boxContentText);
+    boxContent.append(boxContentNumber);
+    box.append(span);
+    box.append(boxContent);
+    divCol.append(box);
+    divEjerciciosDificultad.append(divCol);
+  }
+}
+
+  if("{{{numejercicios}}}" >= 10 && "{{{numejercicios}}}" <= 20){
+    // var divEjerciciosDificultad = $("#ejercicios-dificultad-estadistica");
+    // var divCol = $('<div class="col-xs-12 col-sm-6 col-md-4"></div>');
+    // var box = $(' <div class="info-box bg-blue"></div>');
+    // var span = $('<span class="info-box-icon"><i class="fa fa-cube"></i></span>');
+    // var boxContent = $('<div class="info-box-content"></div>');
+    // var boxContentText = $('<span class="info-box-text">Novato</span>');
+    // var boxContentNumber = $('<span class="info-box-number">10 ejercicios resueltos</span>');
+    // boxContent.append(boxContentText);
+    // boxContent.append(boxContentNumber);
+    // box.append(span);
+    // box.append(boxContent);
+    // divCol.append(box);
+    // divEjerciciosDificultad.append(divCol);
+    agregarInsignias(true, false, false, true);
+    agregarInsignias(false, true, true, false);
+  } else if("{{{numejercicios}}}" > 20 && "{{{numejercicios}}}" <= 30) {
+    agregarInsignias(true, true, false, true);
+  } else if("{{{numejercicios}}}" > 30) {
+    agregarInsignias(true, true, true, true);
   } else {
-    $('#usuario-option').show();
+    agregarInsignias(true, true, true, false);
+        var obtenidas = $("#ejercicios-dificultad-estadistica");
+    var divCol = $('<div class="col-xs-12 col-sm-6 col-md-4"></div>');
+    divCol.append('<p>Ninguna insignia obtenida</p>');
+    obtenidas.append(divCol);
   }
 </script>
 
-
-
 <!-- <script src="../../../../js/sandbox_profesor_ejercicios.js"></script>
-<script src="/js/sandbox/usuarios/usuarios_index.js"></script>
 <script src="../../../../js/sandbox_profesor_cargar_datos_no_principal.js"></script> -->
 </body>
 </html>

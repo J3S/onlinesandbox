@@ -97,9 +97,6 @@ function promiseObtenerEjerciciosParalelo(id_Estudiante, index_l, index_m, res, 
                         var retorno = { estadoMostrar: true, knobChart: {data: arreglo, labels: paralelo, total: arr_num_total_ejercicios[0]}};
                         return res.send(JSON.stringify(retorno));
                       }
-                        return new Promise(function(fulfill, reject) {
-                          fulfill(estud[0].idEjercicios.length);
-                        });
                       } else {
                         contadores[0] += 1;
                         arreglo[index_l] = arreglo[index_l] + 0;
@@ -107,9 +104,6 @@ function promiseObtenerEjerciciosParalelo(id_Estudiante, index_l, index_m, res, 
                         var retorno = { estadoMostrar: true, knobChart: {data: arreglo, labels: paralelo, total: arr_num_total_ejercicios[0]}};
                         return res.send(JSON.stringify(retorno));
                       }
-                        return new Promise(function(fulfill, reject) {
-                          fulfill(0);
-                        });
                       }
                     });
 }
@@ -163,9 +157,6 @@ function promiseObtenerMejoresEstudiantes(id_Estudiante, index_l, index_m, res, 
                         var retorno = { estadoMostrar: true, data: {paralelos: paralelo, puntajes: devolver, nombres: devolvernombres}};
                         return res.send(JSON.stringify(retorno));
                       }
-                        return new Promise(function(fulfill, reject) {
-                          fulfill(estud[0].idEjercicios.length);
-                        });
                       } else {
                         puntajes_paralelo[index_l][index_m] = 0;
                         contadores[0] += 1;
@@ -196,15 +187,12 @@ function promiseObtenerMejoresEstudiantes(id_Estudiante, index_l, index_m, res, 
                         var retorno = { estadoMostrar: true, data: {paralelos: paralelo, puntajes: devolver, nombres: devolvernombres}};
                         return res.send(JSON.stringify(retorno));
                       }
-                        return new Promise(function(fulfill, reject) {
-                          fulfill(0);
-                        });
                       }
                     });
 }
 
 router.get('/mejores', function(req, res, next) {
-    var numero_paralelos = 0;
+  var numero_paralelos = 0;
   var num_estudiantes_paralelo = [];
   var puntajes_paralelo = [];
   var idEstudiantesParalelo = [];
@@ -291,8 +279,15 @@ router.get('/paralelos', function(req, res, next) {
   var paralelo = [];
   var arr_num_total_ejercicios = [0]
   var contadores = [];
+  var contador_ids = 0;
+  var contador_ids2 =0;
   Cursos.find(function(err, cursos) {
     if(cursos.length > 0) {
+      for (var i = 0; i < cursos.length; i++) {
+                  idEstudiantesParalelo[i] =[];
+      }
+                //       console.log("IDS INICIAL")
+                // console.log(idEstudiantesParalelo);
       numero_paralelos = cursos.length;
       for (var i = 0; i < cursos.length; i++) {
         paralelo[i] = cursos[i].paralelo;
@@ -313,24 +308,69 @@ router.get('/paralelos', function(req, res, next) {
         nombres_paralelo.push(nombres);
         apellidos_paralelo.push(apellidos);  
       }
+      for (var s = 0; s < nombres_paralelo.length; s++) {
+        contador_ids2 += nombres_paralelo[s].length;
+      }
+      var indexid = 0;
         for (var k = 0; k < nombres_paralelo.length; k++) {
             Usuario.getUsuarioNombre(nombres_paralelo[k], apellidos_paralelo[k], function(err, estudiante) {
               var idEstudiantes = [];
+              var nombresEstudiantes = [];
+              var apellidosEstudiantes = [];
+              var contadorcorrecto = 0;
               if(estudiante.length > 0) {
                 for (var i = 0; i < estudiante.length; i++) {
                   idEstudiantes.push(estudiante[i]._id);
+                  contador_ids = contador_ids + 1;
                 }
-                idEstudiantesParalelo.push(idEstudiantes);
+                for (var i = 0; i < estudiante.length; i++) {
+                  nombresEstudiantes.push(estudiante[i].nombres);
+                  apellidosEstudiantes.push(estudiante[i].nombres);
+                }
+                console.log("NOMBRES ESTUDIANTES")
+                console.log(nombresEstudiantes);
+                console.log("IDS para agregar");
+                console.log(idEstudiantes);
+                for (var i = 0; i < cursos.length; i++) {
+                  console.log("---------------------");
+                  console.log("---------------------");
+                  console.log("---------------------");
+                  console.log("Curso estudiantes: " + cursos[i].estudiantes);
+                  contadorcorrecto = 0;
+                  for (var j = 0; j < estudiante.length; j++) {
+                    if(cursos[i].estudiantes.indexOf(nombresEstudiantes[j]) !== -1 && cursos[i].estudiantes.indexOf(apellidosEstudiantes[j]) !== -1) {
+                      contadorcorrecto += 1;
+                    }
+                  }
+                  console.log("Contador correcto " + contadorcorrecto);
+                  console.log("Contador verificar " + cursos[i].estudiantes.split(',').length);
+                  if(contadorcorrecto == cursos[i].estudiantes.split(',').length){
+                    idEstudiantesParalelo[i] = idEstudiantes.slice();
+                    console.log("Cursos");
+                    console.log(cursos);
+                    cursos[i].estudiantes = "";
+                    console.log("Cursos despues");
+                    console.log(cursos);
+                    console.log("Index: " + i)
+                    console.log("IDS");
+                    console.log(idEstudiantesParalelo);
+                    i = cursos.length;
+                    contadorcorrecto = 0;
+                  }
+                }
+                // idEstudiantesParalelo.push(idEstudiantes);
+              } else {
+                contadores[0] += 1;
               }
-              if(idEstudiantesParalelo.length == nombres_paralelo.length) {
+
+
+              if(contador_ids == contador_ids2) {
+              console.log("IDS");
+              console.log(idEstudiantesParalelo);
                 var l;
                 var m;
-                var v1 = idEstudiantesParalelo.length-1; 
-                var v2 = idEstudiantesParalelo[v1].length-1;
-                contadores[1] = (v1+1) * (v2+1);
-                // contador_final = (v1+1) * (v2+1);
+                contadores[1] = contador_ids;
                 contadores[0] = 1;
-                // contador = 1;
                 arr_num_total_ejercicios[0] = 0;
                 num_ejercicios_resueltos_paralelo = new Array(idEstudiantesParalelo.length + 1).join('0').split('').map(parseFloat);
                 for (l = 0; l < idEstudiantesParalelo.length; l++) {
@@ -339,14 +379,17 @@ router.get('/paralelos', function(req, res, next) {
                       num_ejercicios_resueltos_paralelo[l] = 0;
                     contadores[0] = 0;
                     // contador = 0;
-                    var ne = promiseObtenerEjerciciosParalelo(idEstudiantesParalelo[l][m], l, m, res, num_ejercicios_resueltos_paralelo, paralelo, arr_num_total_ejercicios, contadores);
+                    promiseObtenerEjerciciosParalelo(idEstudiantesParalelo[l][m], l, m, res, num_ejercicios_resueltos_paralelo, paralelo, arr_num_total_ejercicios, contadores);
                   }
                 }
+              } else {
+                contadores[0] += 1;
               }
             });
         }
     } else {
-      return res.send(JSON.stringify({ estadoMostrar: false, contenidoMSG: "No hay cursos registrados"}));
+      var retorno = { estadoMostrar: true, knobChart: {data: num_ejercicios_resueltos_paralelo, labels: paralelo, total: arr_num_total_ejercicios[0]}};
+      return res.send(JSON.stringify(retorno));
     }
   });
 });
